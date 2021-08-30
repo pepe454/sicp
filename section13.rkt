@@ -1,4 +1,6 @@
 #lang sicp
+
+
 (define (even? x)
   (= (remainder x 2) 0))
 (define (cube x)
@@ -318,8 +320,90 @@
 
 ;((double (double inc)) 5)
 
+;1.42
+(define (compose f g)
+  (lambda (x) (f (g x))))
 
 
+;((compose square inc) 6)
 
 
+;1.42
+(define (repeated f k)
+  (define (repeated-lambda x)
+    (define (repeated-recurse i x)
+      (if (= i 1)
+          (f x)
+          (f (repeated-recurse (- i 1) x))))
+    (repeated-recurse k x))
+  repeated-lambda)
 
+
+;((repeated square 2) 8)
+
+;1.44
+(define (smooth f)
+  (lambda (x)
+    (/ (+ (f x)
+          (f (- x dx))
+          (f (+ x dx)))
+       3)))
+
+(define (n-fold-smooth f n)
+  ((repeated smooth n) f))
+
+((n-fold-smooth square 10) 2)
+
+
+(define (cube-root x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y))))
+               1.0))
+
+(cube-root 27)
+(cube-root 100)
+(cube-root 1000)
+
+;1.45
+(define (fourth-root x)
+  (fixed-point (average-damp
+                (average-damp (lambda (y) (/ x (cube y)))))
+               1.0))
+
+(define (seventh-root x)
+  (fixed-point (average-damp
+                (average-damp (lambda (y) (/ x (* (cube y) (cube y))))))
+               1.0))
+
+(seventh-root 100)
+
+
+; sqrt need 1 average damp. cube need 1 average damp
+; fourth need 2 average damp, fifth need 2 avg damp
+; sixth need 2 average damp and its pretty good, 
+
+
+(define (iterative-improve good? improve-guess)
+  (define (improve-until-good guess)
+    (if (good? guess)
+        guess
+        (improve-until-good (improve-guess guess))))
+  improve-until-good)
+
+; tolerance is (define tolerance 0.00001)
+(define (fixed-point-iterative f initial-guess)
+  (define (close-enough guess)
+    ;(display guess)
+    ;(newline)
+    (< (abs (- guess (f guess)))
+       tolerance))
+  ((iterative-improve close-enough f) initial-guess))
+
+(define golden-ratio-2
+  (fixed-point-iterative (lambda (x) (+ 1 (/ 1 x)))
+                         1.0))
+
+golden-ratio-2
+
+(define (sqrt-2 x)
+  (fixed-point-iterative (average-damp (lambda (y) (/ x y)))
+                         1.0))
