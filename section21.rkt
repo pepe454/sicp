@@ -245,12 +245,59 @@
                     (make-point 10 0)))
 
 ;should be 10.
-(length test-rectangle-2)
+;(length test-rectangle-2)
 ;should be 5.
-(width test-rectangle-2)
+;(width test-rectangle-2)
 
 ;should be 10+10+5+5 = 30
-(perimeter test-rectangle-2)
+;(perimeter test-rectangle-2)
 ;should be 10*5 = 30
-(area test-rectangle-2)
-                                
+;(area test-rectangle-2)
+
+; thoughts of data:
+; collection of selectors and constructors with specified cnds
+; that the procedures of selection + construction must fulfill.
+
+; having first-class procedures + functions make it
+; possible to represent compound data, dare i say objects,
+; 
+
+
+(define (cons-ex x y)
+  (lambda (m) (m x y)))
+(define (car-ex z)
+  (z (lambda (p q) p)))
+(define (cdr-ex z)
+  (z (lambda (p q) q)))
+
+; should be 7
+; (cdr-ex (cons-ex 5 7))
+; why? here is the substitution method in action
+; (cdr-ex (lambda (m) (m 5 7)))
+; ((lambda (m) (m 5 7)) (lambda (p q) q))
+; ((lambda (p q) q) 5 7)
+; ((lambda (5 7) 7)
+; 7
+
+; ex 2.5
+(define (cons-int a b)
+  (if (and (> a -1)
+           (> b -1))
+      (* (expt 2 a)
+         (expt 3 b))
+      (error "Argument must be >= 0: " a)))
+
+; since the number is 2^a * 3^b
+; you want to get a. how?
+
+; heres an idea. we could try keep dividing by 3 or 2.
+; no way to know what is a or b.
+; log is just repeated division though, yeah?
+; so maybe some kind of binary search. 
+(define (car-int pair))
+  
+
+; should be 2^2*3^3 = 4*27 = 108
+;(cons-int 2 3)
+
+
