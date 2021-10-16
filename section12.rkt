@@ -12,6 +12,9 @@
           (else (factorial-iter (+ i 1) n (* product i)))))
   (factorial-iter 1 n 1))
 
+
+; EX 1.10
+
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
@@ -37,12 +40,17 @@
         (fib-iter (+ i 1) n sum (+ current-fib sum))))
   (fib-iter 0 n 0 1))
 
+
+; EX 1.11
+
 (define (func n)
   (if (< n 3)
       n
       (+ (func (- n 1))
          (* 2 (func (- n 2)))
          (* 3 (func (- n 3))))))
+
+; EX 1.12
 
 ; get pascal element in row, col
 (define (pascal row col)
@@ -52,6 +60,8 @@
                          (- col 1))
                  (pascal (- row 1)
                          col)))))
+
+; EX 1.16
 
 (define (even? n)
   (= (remainder n 2) 0))
@@ -71,6 +81,9 @@
 
 (define (halve n) (/ n 2))
 
+
+; EX 1.18
+
 (define (mult2 a b)
   (cond ((= b 1) a)
         ((= b -1) (- a))
@@ -84,6 +97,9 @@
           (else (mult-iter (+ sum a) a (- b 1)))))
   (mult-iter 0 a b))
 
+
+; EX 1.21
+
 (define (smallest-divisor n) (find-divisor n 2))
 (define (next test-divisor)
   (if (= 2 test-divisor) 3 (+ 2 test-divisor)))
@@ -93,6 +109,9 @@
         ((divides? test-divisor n) test-divisor)
         (else (find-divisor n (next test-divisor)))))
 (define (divides? a b) (= (remainder b a) 0))
+
+
+; EX 1.22
 
 (define (prime? n)
   (= n (smallest-divisor n)))
@@ -117,6 +136,9 @@
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
          
+
+; EX 1.24
+
 (define (fast-prime? n times)
   (cond ((= times 0) true)
         ((fermat-test n) (fast-prime? n (- times 1)))
@@ -144,6 +166,8 @@
   (search-primes-iter 0 start))
 
 
+; EX 1.27
+
 (define (carmichael-test n)
   (define (carmichael-iter a n)
     (cond ((= a n) #t)
@@ -151,6 +175,9 @@
            (carmichael-iter (+ a 1) n))
           (else #f)))
   (carmichael-iter 2 n))
+
+
+; EX 1.28
 
 (define (expmod-miller-rabin base exp m)
   (cond ((= exp 0) 1)

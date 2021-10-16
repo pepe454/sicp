@@ -14,6 +14,8 @@
       (+ (term a)
          (sum2 term (next a) next b))))
 
+; EX 1.30
+
 (define (sum term a next b)
   (define (sum-iter a result)
     (if (> a b)
@@ -32,6 +34,8 @@
 (define (sum-integers a b)
   (sum identity a inc b))
 
+; EX 1.31
+
 (define (pi-sum a b)
   (define (pi-term x)
     (/ 1.0 (* x (+ x 2))))
@@ -47,6 +51,9 @@
     (+ x dx))
   (* (sum f (+ a (/ dx 2.0)) add-dx b)
      dx))
+
+
+; EX 1.29
 
 (define (simpsons-rule f a b n)
   (define h (/ (- b a) n))
@@ -84,6 +91,9 @@
 
 (define (factorial n)
   (product identity 1 inc n))
+
+
+; EX 1.32
 
 (define (accumulate combiner null-value term a next b)
   (define (accumulate-iter a b result)
@@ -124,6 +134,9 @@
        (square (+ (* 2 x) 1))))
   (product-accum pi-term 1 inc b))
 
+
+; EX 1.33
+
 (define (filtered-accumulate filter combiner null-value term a next b)
   (define (accumulate-iter a result)
     (cond ((> a b) result)
@@ -152,8 +165,9 @@
 ;(sum-primes 1 5)
 
 
-;1.34 let's use the applicative order evaluation to see:
-;(f f) -> (f 2) -> (2 2). since 2 is not a procedure this would cause an error.
+; EX 1.34
+; let's the applicative order evaluation to see:
+; (f f) -> (f 2) -> (2 2). since 2 is not a procedure this would cause an error.
 
 (define (average a b)
   (/ (+ a b) 2))
@@ -198,6 +212,9 @@
           (try next))))
   (try first-guess))
 
+
+; EX 1.35
+
 (define golden-ratio
   (fixed-point (lambda (x) (+ 1 (/ 1 x)))
                1.0))
@@ -206,7 +223,7 @@
 ; show that it is a fixed point of x -> 1 + 1/x; divide both side by x. 
 ;
 
-;ex 1.36
+; EX 1.36
 
 (define (damped-136 x)
   (* (/ 1 2)
@@ -218,8 +235,8 @@
   (fixed-point (lambda (x) (damped-136 x))
                3.0))
 
-;ex136
 
+; EX 1.37
 
 ; compute value of k-term finite continued fraction
 ; start n, d at 1, 1
@@ -251,6 +268,9 @@
 (cont-frac-recurse (lambda (i) 1.0)
                    (lambda (i) 1.0)
                    100)
+
+; EX 1.38
+
 ;approximate e
 (define (eulers-denoms i)
   (cond ((= i 1) 1)
@@ -262,6 +282,8 @@
            eulers-denoms
            100)
 
+
+; EX 1.39
 
 (define (tan-cf x k)
   (cont-frac (lambda (x)
@@ -300,8 +322,9 @@
   (fixed-point (transform g) guess))
 
 
-;1.40 allow for expression like
-;(newtons-method (cubic a b c) 1) -> x^3 + ax^2 + bx + c
+; EX 1.40 
+; allow for expression like
+; (newtons-method (cubic a b c) 1) -> x^3 + ax^2 + bx + c
 (define (cubic a b c)
   (lambda (x) (+ (cube x)
                  (* a (square x))
@@ -314,13 +337,13 @@
 ;
 
 
-;1.41
+; EX 1.41
 (define (double proc)
   (lambda (x) (proc (proc x))))
 
 ;((double (double inc)) 5)
 
-;1.42
+; EX 1.42
 (define (compose f g)
   (lambda (x) (f (g x))))
 
@@ -328,7 +351,7 @@
 ;((compose square inc) 6)
 
 
-;1.42
+; EX 1.43
 (define (repeated f k)
   (define (repeated-lambda x)
     (define (repeated-recurse i x)
@@ -341,7 +364,7 @@
 
 ;((repeated square 2) 8)
 
-;1.44
+; EX 1.44
 (define (smooth f)
   (lambda (x)
     (/ (+ (f x)
@@ -363,7 +386,7 @@
 (cube-root 100)
 (cube-root 1000)
 
-;1.45
+; EX 1.45
 (define (fourth-root x)
   (fixed-point (average-damp
                 (average-damp (lambda (y) (/ x (cube y)))))
@@ -403,6 +426,8 @@
                          1.0))
 
 golden-ratio-2
+
+; EX 1.46
 
 (define (sqrt-2 x)
   (fixed-point-iterative (average-damp (lambda (y) (/ x y)))

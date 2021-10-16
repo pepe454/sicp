@@ -1,0 +1,133 @@
+#lang sicp
+
+; Symbolic data: work with arbitrary symbols as data
+
+(define a 1)
+(define b 2)
+;(list a b)
+;(list 'a 'b)
+(define false #f)
+(define true #t)
+(define abc (list '(a b c)))
+;(list '123)
+;(list nil)
+;(list '())
+
+(define (memq symbol symbols)
+  (cond ((null? symbols) false)
+        ((eq? symbol (car symbols)) symbols)
+        (else (memq symbol (cdr symbols)))))
+
+;(memq 'apple '(x (apple sauce) y apple pear))
+
+; 2.53
+; (a b c)
+; ((george))
+; ((y1 y2))
+; (y1 y2)
+; #f
+; #f
+; (red shoes blue socks)
+
+(define (list-equal? list1 list2)
+  (cond ((and (null? list1)
+              (null? list2)) true)
+        ((or (null? list1)
+             (null? list2)) false)
+        ((not (eq? (car list1)
+                   (car list2))) false)
+        (else (list-equal? (cdr list1)
+                           (cdr list2)))))
+
+;(list-equal? '(this is a list) '(this is a list))
+;(list-equal? '(this is a list) '(this (is a) list))
+
+; 2.55
+; when you quote a quote, "quote" is itself now part of the symbol.
+; the first character in a quoted quote is '.
+; thus, the first element, the car, is '
+
+
+; taking some derivatives
+; ax2 + bx + c should be derived to 2ax + b
+(define (variable? x) (symbol? x))
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+(define (make-expr-prefix op v1 v2)
+  (list op v1 v2))
+(define (numbers? a b)
+  (and (number? a) (number? b)))
+
+
+; sums, addition
+(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((numbers? a1 a2)
+         (+ a1 a2))
+        (else (make-expr-prefix '+ a1 a2))))
+(define (sum? x) (and (pair? x) (eq? (car x) '+)))
+(define (addend s) (cadr s))
+(define (augend s) (caddr s))
+
+; products multiplication
+(define (make-product m1 m2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((numbers? m1 m2) (* m1 m2))
+        (else (make-expr-prefix '* m1 m2))))
+(define (product? x) (and (pair? x) (eq? (car x) '*)))
+(define (multiplier p) (cadr p))
+(define (multiplicand p) (caddr p))
+
+
+(define (make-exponentiation base exponent)
+  (cond ((=number? base 1) 1)
+        ((=number? exponent 1) base)
+        ((=number? exponent 0) 1)
+        ((numbers? base exponent)
+         (expt base exponent))
+        (else (make-expr-prefix '** base exponent))))
+(define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
+(define (base x) (cadr x))
+(define (exponent x) (caddr x))
+
+;(make-exponentiation 1 1)
+;(make-exponentiation 2 1)
+;(make-exponentiation 5 0)
+;(make-exponentiation 4 3)
+;(make-exponentiation 'b 1)
+;(make-exponentiation 'b 2)
+;(exponentiation? '(** x 1))
+;(make-exponentiation 'a 3)
+;(exponentiation? (make-exponentiation 'a 3))
+
+
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        ((sum? exp) (make-sum (deriv (addend exp) var)
+                              (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product (multiplier exp)
+                        (deriv (multiplicand exp) var))
+          (make-product (deriv (multiplier exp) var)
+                        (multiplicand exp))))
+        ((exponentiation? exp)
+         (let ((old-e (exponent exp))
+               (old-b (base exp)))
+           (make-product
+            (make-product old-e
+                          (make-exponentiation old-b (make-sum old-e -1)))
+            (deriv old-b var))))
+        (else
+         (error "unknown expression type: DERIV" exp))))
+
+;(deriv '(* (* x y) (+ x 3)) 'x)
+;(deriv '(+ x 3) 'x)
+;(deriv '(* x y) 'x)
+(deriv '(** x 4) 'x)

@@ -43,10 +43,15 @@ area
 (even-only 3)
 
 
+; EX 1.2
+
 (/ (+ 5 4 (- 2
              (- 3
                 (+ 6 (/ 4 5)))))
    (* 3 (- 6 2) (- 2 7)))
+
+
+; EX 1.3
 
 (define (sum-squares-largest a b c)
   (cond ((and (<= a b) (<= a c)) (sum-squares b c))
@@ -59,14 +64,21 @@ area
 (sum-squares-largest 1 1 1)
 (sum-squares-largest 3 2 1)
 
+
+; EX 1.5
+
 (define (p)
   (p))
 
 (define (test x y)
   (if (= x 0) 0 y))
 
+
+; EX 1.7
+
 (define (abs x)
   (if (< x 0) (- x) x))
+
 
 ; test if x is approx a good root for y with bound 
 (define (root-test-approx guess x bound)
@@ -87,6 +99,9 @@ area
 (sqrt 3)
 (sqrt 2)
 
+
+; EX 1.8
+
 ; new guess test
 (define (root-test-approx2 old-guess guess bound)
   (<= (/ (abs (- guess old-guess))
@@ -95,6 +110,7 @@ area
 
 (define (improve2 guess x)
   (/ (+ guess (/ x guess)) 2))
+
 
 (define (newtons-method2 old-guess guess x)
   (if (root-test-approx2 old-guess guess .00001)
