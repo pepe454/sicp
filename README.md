@@ -1,5 +1,7 @@
 Solutions to excercises from the Structure and Interpretation of Computer Programs
 
+Excercise solutions are labelled like "EX 1.21". Certain excercises are hard to illustrate, because they require modifying previous answers.
+
 You can find the book for free here: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html
 
 You can also find a community wiki with solutions here: http://community.schemewiki.org/?SICP-Solutions
